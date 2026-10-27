@@ -2,7 +2,7 @@
 
 An interactive management dashboard built for the SapphireIQ Data Analyst internship. It gives a non-technical manager (Ravi) a one-page view of sales, profit, products, orders, order status, payment, fulfilment and state-wise performance.
 
-**Live demo:** enable GitHub Pages (Settings > Pages > Deploy from branch `main`, folder `/root`) and open `https://<your-username>.github.io/<repo-name>/`
+ **Live demo:** https://sudabathulasushma-cyber.github.io/amazon-india-dashboard/
 
 ## What the dashboard shows
 
