@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Amazon India Dashboard</title>
+<style>
+:root{--bg:#f3f5fa;--card:#fff;--ink:#0f1b3d;--mut:#5b6785;--line:#dde2ee;--acc:#1a44e8;--org:#ff9900;--bad:#d64545;--good:#1f9d6b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1226;--card:#141d38;--ink:#e8ecf8;--mut:#93a0c4;--line:#26335a;--acc:#6f8cff;--org:#ffb029;--bad:#ff7a7a;--good:#4cd09b}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Segoe UI",Arial,sans-serif}
+header{background:var(--ink);color:#fff;padding:20px 5vw 16px}
+header h1{margin:0;font-size:24px}header p{margin:4px 0 0;color:#b9c3e6;font-size:14px}
+.filters{display:flex;flex-wrap:wrap;gap:12px;padding:12px 5vw;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.filters label{font-size:13px;color:var(--mut);display:flex;flex-direction:column;gap:2px}
+select,button{font:inherit;padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+button{align-self:flex-end;cursor:pointer}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+main{padding:20px 5vw 40px;max-width:1280px;margin:auto}
+h2{font-size:18px;margin:28px 0 4px}
+.q{color:var(--mut);margin:0 0 12px;font-size:14px}
+.grid{display:grid;gap:14px}
+.k6{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.c2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;min-width:0}
+.card h3{margin:0 0 10px;font-size:14px;color:var(--mut);font-weight:600}
+.kpi b{display:block;font-size:24px;margin-top:2px}.kpi span{font-size:13px;color:var(--mut)}
+.kpi.bad b{color:var(--bad)}.kpi.good b{color:var(--good)}
+.row{display:grid;grid-template-columns:minmax(90px,36%) 1fr auto;gap:8px;align-items:center;margin:5px 0;font-size:13px}
+.row i{display:block;height:12px;background:var(--acc);border-radius:3px;min-width:2px}
+.row.o i{background:var(--org)}.row.r i{background:var(--bad)}
+.row em{font-style:normal;color:var(--mut);white-space:nowrap}
+.lab{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ins{margin-top:12px;padding:10px 14px;border-left:4px solid var(--org);background:var(--card);border-radius:0 6px 6px 0;font-size:14px}
+svg{width:100%;height:auto;display:block}
+.leg{font-size:13px;color:var(--mut);margin-top:6px}.leg s{display:inline-block;width:18px;height:3px;vertical-align:middle;margin:0 4px 0 10px;text-decoration:none}
+footer{padding:0 5vw 30px;color:var(--mut);font-size:12px;max-width:1280px;margin:auto}
+</style></head><body>
+<header><h1>Amazon India Dashboard</h1><p>Sales, profit, orders and markets in one view. Prepared by Manoj for Ravi.</p></header>
+<div class="filters">
+<label>Year<select id="fy"></select></label>
+<label>Category<select id="fc"></select></label>
+<label>State<select id="fs"></select></label>
+<button id="rs">Reset filters</button></div>
+<main>
+<h2>1. Overall sales and profit</h2><p class="q">How is the business performing overall?</p>
+<div class="grid k6" id="kpi"></div>
+<div class="card" style="margin-top:14px"><h3>Monthly sales and profit</h3><div id="trend"></div>
+<div class="leg"><s style="background:var(--acc)"></s>Sales<s style="background:var(--org)"></s>Profit</div></div>
+<div class="ins" id="i1"></div>
+
+<h2>2. Categories and products</h2><p class="q">Which products and categories are driving the business?</p>
+<div class="grid c2">
+<div class="card"><h3>Sales by category</h3><div id="cs"></div></div>
+<div class="card"><h3>Profit by category</h3><div id="cp"></div></div>
+<div class="card"><h3>Units sold by category</h3><div id="cu"></div></div>
+<div class="card"><h3>Top 10 products by sales</h3><div id="tp"></div></div></div>
+<div class="ins" id="i2"></div>
+
+<h2>3. Order status and revenue loss</h2><p class="q">How many orders are completed and how many are being lost?</p>
+<div class="grid k6" id="st"></div>
+<div class="grid c2" style="margin-top:14px">
+<div class="card"><h3>Returned orders by category</h3><div id="cr"></div></div>
+<div class="card"><h3>Cancelled orders by category</h3><div id="cc"></div></div></div>
+<div class="ins" id="i3"></div>
+
+<h2>4. Payment, fulfilment and states</h2><p class="q">Which payment methods, fulfilment methods and states generate the business?</p>
+<div class="grid c2">
+<div class="card"><h3>Sales by payment method</h3><div id="ps"></div></div>
+<div class="card"><h3>Profit by payment method</h3><div id="pp"></div></div>
+<div class="card"><h3>Sales by fulfilment method</h3><div id="fs2"></div></div>
+<div class="card"><h3>Profit by fulfilment method</h3><div id="fp"></div></div>
+<div class="card"><h3>Sales by state</h3><div id="ss"></div></div>
+<div class="card"><h3>Profit by state</h3><div id="sp"></div></div>
+<div class="card"><h3>Orders by state</h3><div id="so"></div></div></div>
+<div class="ins" id="i4"></div>
+</main>
+<footer>Sales are gross: cancelled and returned orders keep their sales value but earn no profit. Shipped orders are still in transit. Amounts in ₹ (L = lakh, Cr = crore).</footer>
+<script>
+const D=__DATA__;
+const $=s=>document.getElementById(s);
+const fm=v=>v>=1e7?'₹'+(v/1e7).toFixed(2)+' Cr':v>=1e5?'₹'+(v/1e5).toFixed(2)+' L':'₹'+Math.round(v).toLocaleString('en-IN');
+const nm=v=>Math.round(v).toLocaleString('en-IN');
+const pc=v=>(v*100).toFixed(1)+'%';
+// row: 0 month,1 cat,2 prod,3 qty,4 sales,5 profit,6 pay,7 ful,8 status,9 state
+const years=[...new Set(D.months.map(m=>m.slice(0,4)))];
+function fill(id,first,list){$(id).innerHTML='<option value="">'+first+'</option>'+list.map((x,i)=>'<option value="'+i+'">'+x+'</option>').join('')}
+$('fy').innerHTML='<option value="">All years</option>'+years.map(y=>'<option>'+y+'</option>').join('');
+fill('fc','All categories',D.cats);fill('fs','All states',D.states);
+function grp(rows,k){const m={};rows.forEach(r=>{const g=m[r[k]]||(m[r[k]]={s:0,p:0,o:0,u:0});g.s+=r[4];g.p+=r[5];g.o++;g.u+=r[3]});return m}
+function bars(id,list,names,key,f,cls,top){
+ let a=Object.keys(list).map(k=>[names?names[k]:k,list[k][key]]).sort((x,y)=>y[1]-x[1]);if(top)a=a.slice(0,top);
+ const mx=Math.max(1,...a.map(x=>x[1]));
+ $(id).innerHTML=a.map(x=>'<div class="row '+(cls||'')+'"><span class="lab" title="'+x[0]+'">'+x[0]+'</span><i style="width:'+(x[1]/mx*100)+'%"></i><em>'+f(x[1])+'</em></div>').join('')||'No data'}
+function kpi(l,v,c){return '<div class="card kpi '+(c||'')+'"><span>'+l+'</span><b>'+v+'</b></div>'}
+function top1(g,names,key){const e=Object.keys(g).sort((a,b)=>g[b][key]-g[a][key])[0];return e===undefined?null:[names?names[e]:e,g[e][key]]}
+function render(){
+ const fy=$('fy').value,fc=$('fc').value,fs=$('fs').value;
+ const R=D.rows.filter(r=>(!fy||D.months[r[0]].slice(0,4)===fy)&&(fc===''||r[1]==fc)&&(fs===''||r[9]==fs));
+ const S=R.reduce((a,r)=>a+r[4],0),P=R.reduce((a,r)=>a+r[5],0),U=R.reduce((a,r)=>a+r[3],0),O=R.length;
+ $('kpi').innerHTML=kpi('Total sales',fm(S))+kpi('Total profit',fm(P))+kpi('Total orders',nm(O))+kpi('Units sold',nm(U))+kpi('Average order value',fm(O?S/O:0))+kpi('Profit margin',pc(S?P/S:0));
+ // trend
+ const gm=grp(R,0),ms=Object.keys(gm).map(Number).sort((a,b)=>a-b);
+ if(ms.length){const mx=Math.max(...ms.map(m=>gm[m].s)),W=700,H=230,L=46,B=26,x=i=>L+(ms.length>1?i*(W-L-10)/(ms.length-1):(W-L)/2),y=v=>H-B-(v/mx)*(H-B-12);
+  const line=(k,c)=>'<polyline fill="none" stroke="'+c+'" stroke-width="2.5" points="'+ms.map((m,i)=>x(i)+','+y(gm[m][k])).join(' ')+'"/>';
+  let g='';[0,.5,1].forEach(t=>{g+='<line x1="'+L+'" x2="'+W+'" y1="'+y(mx*t)+'" y2="'+y(mx*t)+'" stroke="var(--line)"/><text x="'+(L-4)+'" y="'+(y(mx*t)+4)+'" text-anchor="end" font-size="11" fill="var(--mut)">'+fm(mx*t)+'</text>'});
+  ms.forEach((m,i)=>{if(i%Math.ceil(ms.length/8)===0)g+='<text x="'+x(i)+'" y="'+(H-8)+'" text-anchor="middle" font-size="11" fill="var(--mut)">'+D.months[m]+'</text>'});
+  $('trend').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Monthly sales and profit trend">'+g+line('s','var(--acc)')+line('p','var(--org)')+'</svg>';
+  const h=Math.floor(ms.length/2),avg=a=>a.reduce((t,m)=>t+gm[m].s,0)/Math.max(1,a.length),a1=avg(ms.slice(0,h)),a2=avg(ms.slice(h)),ch=a1?(a2/a1-1):0;
+  $('i1').innerHTML='<b>Insight:</b> Average monthly sales in the later half of the period are '+(Math.abs(ch)<.02?'about the same as':pc(Math.abs(ch))+(ch>0?' higher than':' lower than'))+' the earlier half. Profit margin is '+pc(S?P/S:0)+'.'}
+ else{$('trend').innerHTML='No data for these filters';$('i1').innerHTML=''}
+ // categories
+ const gc=grp(R,1);bars('cs',gc,D.cats,'s',fm);bars('cp',gc,D.cats,'p',fm,'o');bars('cu',gc,D.cats,'u',nm);
+ const gp=grp(R,2);bars('tp',gp,D.prods,'s',fm,'',10);
+ const tc=top1(gc,D.cats,'s'),tpd=top1(gp,D.prods,'s');
+ $('i2').innerHTML=tc?'<b>Insight:</b> '+tc[0]+' is the biggest category with '+pc(tc[1]/S)+' of sales. The best product is '+tpd[0]+' ('+fm(tpd[1])+'). Categories with a small share of sales need attention.':'';
+ // status
+ const gs=grp(R,8),c=n=>(gs[D.sts.indexOf(n)]||{o:0,s:0});
+ const dl=c('Delivered'),sh=c('Shipped'),rt=c('Returned'),cn=c('Cancelled'),lost=rt.s+cn.s;
+ $('st').innerHTML=kpi('Delivered orders',nm(dl.o),'good')+kpi('Shipped orders',nm(sh.o))+kpi('Returned orders',nm(rt.o),'bad')+kpi('Cancelled orders',nm(cn.o),'bad')+kpi('Return rate',pc(O?rt.o/O:0),'bad')+kpi('Cancellation rate',pc(O?cn.o/O:0),'bad')+kpi('Sales lost',fm(lost),'bad');
+ const cat=(n)=>{const m={};R.filter(r=>D.sts[r[8]]===n).forEach(r=>{m[r[1]]=(m[r[1]]||{o:0});m[r[1]].o++});return m};
+ bars('cr',cat('Returned'),D.cats,'o',nm,'r');bars('cc',cat('Cancelled'),D.cats,'o',nm,'r');
+ $('i3').innerHTML='<b>Insight:</b> Returns and cancellations together cost '+fm(lost)+', which is '+pc(S?lost/S:0)+' of total sales, and earn no profit.';
+ // payment, fulfilment, state
+ const gpay=grp(R,6),gf=grp(R,7),gst=grp(R,9);
+ bars('ps',gpay,D.pays,'s',fm);bars('pp',gpay,D.pays,'p',fm,'o');
+ bars('fs2',gf,D.fuls,'s',fm);bars('fp',gf,D.fuls,'p',fm,'o');
+ bars('ss',gst,D.states,'s',fm,'',10);bars('sp',gst,D.states,'p',fm,'o',10);bars('so',gst,D.states,'o',nm,'',10);
+ const tpay=top1(gpay,D.pays,'s'),tf=top1(gf,D.fuls,'s'),ts=top1(gst,D.states,'s');
+ $('i4').innerHTML=tpay?'<b>Insight:</b> '+tpay[0]+' is the leading payment method ('+pc(tpay[1]/S)+' of sales) and '+tf[0]+' the leading fulfilment method ('+pc(tf[1]/S)+'). '+ts[0]+' is the top state with '+pc(ts[1]/S)+' of sales.':'';
+}
+['fy','fc','fs'].forEach(i=>$(i).onchange=render);
+$('rs').onclick=()=>{['fy','fc','fs'].forEach(i=>$(i).value='');render()};
+render();
+</script></body></html>
